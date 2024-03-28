@@ -6,8 +6,10 @@ import com.pinsoft.shopapp.entity.User;
 import com.pinsoft.shopapp.repository.RoleRepository;
 import com.pinsoft.shopapp.repository.UserRepository;
 import com.pinsoft.shopapp.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -18,12 +20,13 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, RoleRepository roleRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
@@ -39,25 +42,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<User> addUser(String username, String email, String roleName, String password) {
+    public User addUser(String username, String email, String roleName, String password) {
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
-        user.setPassword(password);
-        Optional<Role> optionalRole = roleRepository.findByName(roleName);
-        if (optionalRole.isEmpty()) {
-            throw new RuntimeException(roleName + " isimli rol bulunamadı");
-        }
-        Role role = optionalRole.get();
+        user.setPassword(passwordEncoder.encode(password));
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new EntityNotFoundException(roleName + " isimli rol bulunamadı"));
         user.setRole(role);
-        User savedUser = userRepository.save(user);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(savedUser.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(savedUser);
+        return userRepository.save(user);
     }
+
+
 
     @Override
     public ResponseEntity<DeleteUser> deleteUser(int id) {
@@ -70,7 +66,7 @@ public class UserServiceImpl implements UserService {
         } else {
             return ResponseEntity.notFound().build();
         }
-    } //response için 200 yeterli
+    }
 
     @Override
     public ResponseEntity updateUser(User user) {

@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
+
     private static final String[] AUTH_WHITELIST = {
             "/v2/api-docs",
             "/swagger-ui.html",
@@ -37,9 +38,9 @@ public class SecurityConfig {
     ) throws Exception {
         http.authorizeHttpRequests(
                         requests ->
-                                requests.requestMatchers("/login").permitAll()
+                                requests.requestMatchers("/api/login").permitAll()
                                         .requestMatchers(AUTH_WHITELIST).permitAll()
-                                        .requestMatchers("/register").permitAll()
+                                        .requestMatchers("/api/register").permitAll()
                                         .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                         .anyRequest().authenticated()
                 )

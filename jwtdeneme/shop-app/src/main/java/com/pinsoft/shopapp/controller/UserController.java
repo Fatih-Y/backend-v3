@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +52,12 @@ public class UserController {
                                         @RequestParam String email,
                                         @RequestParam String roleName,
                                         @RequestParam String password) {
-        return userService.addUser(username, email, roleName, password);
+        User savedUser = userService.addUser(username, email, roleName, password);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedUser.getId())
+                .toUri();
+        return ResponseEntity.created(location).body(savedUser);
     }
     @PreAuthorize("hasAuthority('admin')")
     @DeleteMapping("/deleteUser/{id}")
