@@ -17,6 +17,7 @@ import java.util.Optional;
 
 
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -51,7 +52,7 @@ public class UserController {
                                         @RequestParam String password) {
         return userService.addUser(username, email, roleName, password);
     }
-
+    @PreAuthorize("hasAuthority('admin')")
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<DeleteUser> deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);

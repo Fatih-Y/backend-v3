@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/product")
 public class ProductController {
 
 	@Autowired
@@ -33,7 +34,7 @@ public class ProductController {
 			@ApiResponse(description = "Data Not Found", responseCode = "404")
 		})
 
-	@GetMapping("/product")
+	@GetMapping("/getAllProducts")
 	public List<GetAllProducts> getAllProducts() {
 		return productService.getAll();
 

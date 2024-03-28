@@ -48,7 +48,7 @@ public class JwtUtil {
     public String createToken(String username, List<String> authorities) {
         Claims claims = Jwts.claims()
                 .subject(username)
-                .add("roles", authorities)
+                .add("role", authorities)
                 .build();
         Date tokenCreateTime = new Date();
         Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));

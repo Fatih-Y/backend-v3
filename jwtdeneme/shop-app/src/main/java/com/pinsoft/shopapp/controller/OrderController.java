@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/orders")
+@RequestMapping("/api/order")
 public class OrderController {
 
     private final OrderService orderService;
@@ -25,7 +25,7 @@ public class OrderController {
             @ApiResponse(description = "Success", responseCode = "200"),
             @ApiResponse(description = "Data Not Found", responseCode = "404")
     })
-    @GetMapping
+    @GetMapping("/getAllOrders")
     public ResponseEntity<List<Order>> getAllOrders(){
         List<Order> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);

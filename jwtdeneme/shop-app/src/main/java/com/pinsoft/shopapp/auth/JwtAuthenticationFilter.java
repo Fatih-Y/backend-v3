@@ -57,8 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = claims.getSubject();
                 System.out.println("username: " + username);
                 @SuppressWarnings("unchecked")
-                List<GrantedAuthority> roles = claims.get("roles", List.class).stream().map(o -> new SimpleGrantedAuthority(String.valueOf(o))).toList();
-                Authentication authentication = new UsernamePasswordAuthenticationToken(username, " ", roles);
+                List<GrantedAuthority> role = claims.get("role", List.class).stream().map(o -> new SimpleGrantedAuthority(String.valueOf(o))).toList();
+                Authentication authentication = new UsernamePasswordAuthenticationToken(username, " ", role);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception exception) {
