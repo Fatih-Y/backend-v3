@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd">
+
+    <changeSet id="20240327-1512" author="fatih">
+
+        <insert tableName="order">
+            <column name="id" valueNumeric="1" />
+            <column name="user_id" valueNumeric ="3" />
+            <column name="name" value="Iphone15"/>
+            <column name="price" valueNumeric="70000.0"/>
+            <column name="quantity" valueNumeric="1"/>
+        </insert>
+        <insert tableName="order">
+            <column name="id" valueNumeric="2" />
+            <column name="user_id" valueNumeric ="2" />
+            <column name="name" value="Iphone14"/>
+            <column name="price" valueNumeric="50000.0"/>
+            <column name="quantity" valueNumeric="5"/>
+        </insert>
+        <insert tableName="order">
+            <column name="id" valueNumeric="3" />
+            <column name="user_id" valueNumeric ="1" />
+            <column name="name" value="Iphone12"/>
+            <column name="price" valueNumeric="30000.0"/>
+            <column name="quantity" valueNumeric="2"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

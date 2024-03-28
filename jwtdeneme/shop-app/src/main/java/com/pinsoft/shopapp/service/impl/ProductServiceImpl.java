@@ -26,12 +26,19 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
 
+
+    private final ProductRepository productRepository;
+
+    private final CategoryRepository categoryRepository;
+
+    private final ModelMapperService modelMapperService;
+
     @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private ModelMapperService modelMapperService;
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ModelMapperService modelMapperService) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.modelMapperService = modelMapperService;
+    }
 
     @Override
     public List<GetAllProducts> getAll() { //ürün listelenirken sadece isim,kategori, resim, fiyat bilgileri

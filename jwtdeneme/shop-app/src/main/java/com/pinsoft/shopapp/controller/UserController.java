@@ -6,8 +6,10 @@ import com.pinsoft.shopapp.entity.User;
 import com.pinsoft.shopapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +29,8 @@ public class UserController {
     @Operation(tags = "List Users", description = "Get All Users", responses = {
             @ApiResponse(description = "Success", responseCode = "200"),
             @ApiResponse(description = "Data Not Found", responseCode = "404")
-    })
-    @GetMapping("/getAllUsers") // shortcut for @RequestMapping(method=RequestMethod.GET)
+    })// shortcut for @RequestMapping(method=RequestMethod.GET)
+    @GetMapping("/getAllUsers")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
@@ -49,12 +51,13 @@ public class UserController {
                                         @RequestParam String password) {
         return userService.addUser(username, email, roleName, password);
     }
+
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<DeleteUser> deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);
     }
 
-    @PostMapping("/updateUser")
+    @PutMapping("/updateUser")
     public ResponseEntity updateUser(@RequestBody User user){
         return userService.updateUser(user);
     }

@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 
 public class RegisterController {
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private RoleRepository roleRepository;
+    public RegisterController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
+    }
 
     @ResponseBody
     @RequestMapping(value = "/register", method = RequestMethod.POST)

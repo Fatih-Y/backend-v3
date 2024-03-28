@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd
+      http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.5.xsd">
+
+
+    <changeSet id="20240327-1" author="fatih">
+
+        <createTable tableName="order">
+
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"
+                             unique="true" />
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="price" type="double">
+                <constraints nullable="false" />
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+
+        <addForeignKeyConstraint
+                baseTableName="order"
+                baseColumnNames="user_id"
+                constraintName="fk_order_user"
+                referencedTableName="user"
+                referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>

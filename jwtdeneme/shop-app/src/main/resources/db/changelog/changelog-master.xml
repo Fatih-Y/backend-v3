@@ -18,5 +18,6 @@
         <include file="/db/changelog/insert-user.xml"/>
         <include file="/db/changelog/insert-user-v2.xml"/>
         <include file="/db/changelog/base64-column.xml"/>
- 
+        <include file="/db/changelog/order-table.xml"/>
+        <include file="/db/changelog/insert-orders.xml"/>
 </databaseChangeLog>
