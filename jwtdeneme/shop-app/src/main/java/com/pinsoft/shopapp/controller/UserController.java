@@ -2,6 +2,8 @@ package com.pinsoft.shopapp.controller;
 
 import com.pinsoft.shopapp.dto.DeleteUser;
 
+import com.pinsoft.shopapp.dto.EditUser;
+import com.pinsoft.shopapp.dto.GetAllUsers;
 import com.pinsoft.shopapp.entity.User;
 import com.pinsoft.shopapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,9 +24,9 @@ import java.util.Optional;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
 
+    private final UserService userService;
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -34,46 +36,49 @@ public class UserController {
             @ApiResponse(description = "Data Not Found", responseCode = "404")
     })// shortcut for @RequestMapping(method=RequestMethod.GET)
     @GetMapping("/getAllUsers")
-    public List<User> getAllUsers() {
+    public List<GetAllUsers> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @Operation(tags = "Select User", description = "Get User by Username", responses = {
-            @ApiResponse(description = "Success", responseCode = "200"),
-            @ApiResponse(description = "Data Not Found", responseCode = "404")
-    })
     @GetMapping("/getUserByUsername/{username}")
     public Optional<User> getUserByUsername(@PathVariable("username") String username) {
         return userService.getUserByUsername(username);
     }
 
     @PostMapping("/addUser")
-    public ResponseEntity<User> addUser(@RequestParam String username,
-                                        @RequestParam String email,
-                                        @RequestParam String roleName,
-                                        @RequestParam String password) {
-        User savedUser = userService.addUser(username, email, roleName, password);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(savedUser.getId())
-                .toUri();
+    public ResponseEntity<User> addUser(@RequestBody User newUser) {
+        User savedUser = userService.addUser(newUser);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(savedUser.getId()).toUri();
         return ResponseEntity.created(location).body(savedUser);
     }
-    @PreAuthorize("hasAuthority('admin')")
+
     @DeleteMapping("/deleteUser/{id}")
     public ResponseEntity<DeleteUser> deleteUser(@PathVariable int id) {
         return userService.deleteUser(id);
     }
 
     @PutMapping("/updateUser")
-    public ResponseEntity updateUser(@RequestBody User user){
-        return userService.updateUser(user);
+    public ResponseEntity<User> updateUser(@RequestBody User user) {
+        return userService.updateUser(user)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @PostMapping("/editUser")
-    public ResponseEntity editUser (@RequestBody User user) {
-        return userService.editUser(user);
+    @PutMapping("/editUser")
+    public ResponseEntity<User> editUser(@RequestBody EditUser editUser) {
+        return userService.editUser(editUser)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+

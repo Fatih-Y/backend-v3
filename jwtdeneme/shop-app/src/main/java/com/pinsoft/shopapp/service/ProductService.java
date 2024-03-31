@@ -1,5 +1,6 @@
 package com.pinsoft.shopapp.service;
 
+import com.pinsoft.shopapp.dto.AddProduct;
 import com.pinsoft.shopapp.dto.GetAllProducts;
 import com.pinsoft.shopapp.dto.GetProductsDetails;
 import com.pinsoft.shopapp.dto.ProductSearch;
@@ -12,7 +13,7 @@ public interface ProductService {
     List<GetAllProducts> getAll();
     List<GetProductsDetails> findAll();
     List<Product> getProductByName(String name);
-    void addProduct(MultipartFile file, String name, double price, String explanation, String categoryName);
+    void addProduct(AddProduct addProduct);
 
     ResponseEntity deleteProduct(int id);
     List<ProductSearch> searchProducts(String name);

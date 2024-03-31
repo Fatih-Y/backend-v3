@@ -1,6 +1,7 @@
 package com.pinsoft.shopapp.controller;
 
 
+import com.pinsoft.shopapp.dto.AddProduct;
 import com.pinsoft.shopapp.dto.GetAllProducts;
 import com.pinsoft.shopapp.dto.GetProductsDetails;
 import com.pinsoft.shopapp.dto.ProductSearch;
@@ -22,9 +23,9 @@ import java.util.List;
 @RequestMapping("/api/product")
 public class ProductController {
 
-	@Autowired
-	private ProductService productService;
 
+	private final ProductService productService;
+	@Autowired
 	public ProductController(ProductService productService) {
 		this.productService = productService;
 	}
@@ -37,8 +38,8 @@ public class ProductController {
 	@GetMapping("/getAllProducts")
 	public List<GetAllProducts> getAllProducts() {
 		return productService.getAll();
-
 	}
+
 
 	@Operation(tags = "Select Product", description = "Get Product", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
@@ -58,14 +59,10 @@ public class ProductController {
 	public List<GetProductsDetails> findAll() {
 		return productService.findAll();
 	}
-	@PostMapping("/addProduct")
-	public String addProduct(@RequestParam("file") MultipartFile file,
-							 @RequestParam("name") String name,
-							 @RequestParam("price") double price,
-							 @RequestParam("explanation") String explanation,
-							 @RequestParam("categoryName") String categoryName) {
-		productService.addProduct(file, name, price, explanation, categoryName);
-		return " Ürün ekleme başarılı";
+	@PostMapping(value = "/addProduct", consumes = {"multipart/form-data"})
+	public ResponseEntity<String> addProduct(@ModelAttribute AddProduct addProduct) {
+		productService.addProduct(addProduct);
+		return ResponseEntity.ok("Ürün ekleme başarılı");
 	}
 	@DeleteMapping("/deleteProduct/{id}")
 	public ResponseEntity deleteProduct(@PathVariable int id) {
