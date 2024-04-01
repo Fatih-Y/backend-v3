@@ -1,21 +1,20 @@
 package com.pinsoft.shopapp.service.impl;
 
-import com.pinsoft.shopapp.dto.DeleteUser;
-import com.pinsoft.shopapp.dto.GetAllProducts;
-import com.pinsoft.shopapp.dto.GetProductsDetails;
-import com.pinsoft.shopapp.dto.ProductSearch;
+import com.pinsoft.shopapp.dto.productDTO.AddProduct;
+import com.pinsoft.shopapp.dto.productDTO.GetAllProducts;
+import com.pinsoft.shopapp.dto.productDTO.GetProductsDetails;
+import com.pinsoft.shopapp.dto.productDTO.ProductSearch;
 import com.pinsoft.shopapp.entity.Category;
 import com.pinsoft.shopapp.entity.Product;
-import com.pinsoft.shopapp.entity.User;
 import com.pinsoft.shopapp.mapper.ModelMapperService;
 import com.pinsoft.shopapp.repository.CategoryRepository;
 import com.pinsoft.shopapp.repository.ProductRepository;
 import com.pinsoft.shopapp.service.ProductService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -55,34 +54,35 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByName(name);
     }
 
-    @Override
-    public void addProduct(MultipartFile file, String name, double price, String explanation, String categoryName) {
-        Product product = new Product();
 
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        if(fileName.contains("..")){
-            System.out.println(" geçersiz dosya");
-        }
-        try {
-            product.setBase64image(Base64.getEncoder().encodeToString(file.getBytes()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        product.setName(name);
-        product.setPrice(price);
-        product.setExplanation(explanation);
-        Category category = categoryRepository.findByName(categoryName);
-        product.setCategory(category);
-
-        productRepository.save(product);
-    }
     @Override
-    public List<GetProductsDetails> findAll() {  //ürüne tıklandığında açılan ürün detayları sayfası için
+    public List<GetProductsDetails> findAll() {  //ürüne tıklanıldığında açılan ürün detayları sayfası için
         List<Product> products = productRepository.findAll();
         List<GetProductsDetails> getProductsDetails = products.stream()
                 .map(product -> this.modelMapperService.forResponse()
                         .map(product, GetProductsDetails.class)).collect(Collectors.toList());
         return getProductsDetails;
+    }
+
+    @Override
+    public void addProduct(AddProduct addProduct) {
+        Product product = new Product();
+        String fileName = StringUtils.cleanPath(addProduct.getFile().getOriginalFilename());
+        if (fileName.contains("..")) {
+            System.out.println("Geçersiz dosya");
+        }
+        try {
+            product.setBase64image(Base64.getEncoder().encodeToString(addProduct.getFile().getBytes()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        product.setName(addProduct.getName());
+        product.setPrice(addProduct.getPrice());
+        product.setExplanation(addProduct.getExplanation());
+        Category category = categoryRepository.findByName(addProduct.getCategoryName())
+                .orElseThrow(() -> new EntityNotFoundException("Böyle bir kategori yok: " + addProduct.getCategoryName()));
+        product.setCategory(category);
+        productRepository.save(product);
     }
 
 

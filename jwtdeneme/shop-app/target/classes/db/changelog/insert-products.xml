@@ -13,7 +13,6 @@
 	<changeSet id="3" author="bekir">
 
 		<insert tableName="product">
-			<column name="id" valueNumeric="1" />
 			<column name="name" value="iPhone 15 Pro" />
 			<column name="explanation" value="iPhone 15 renkle işlenmiş dayanıklı cam ve alüminyum tasarım" />
 			<column name="price" value="49999.99" />
@@ -21,7 +20,6 @@
 		</insert>
 
 		<insert tableName="product">
-			<column name="id" valueNumeric="2"/>
 			<column name="name" value="Xiaomi 14" />
 			<column name="explanation" value="Xiaomi 14 , performansta yeni bir seviye" />
 			<column name="price" value="45000.99" />
@@ -29,7 +27,6 @@
 		</insert>
 		
 		<insert tableName="product">
-			<column name="id" valueNumeric="3"/>
 			<column name="name" value="HUAWEI MateBook D 14" />
 			<column name="explanation" value="12. Nesil Intel® Core™ İşlemci.Yüksek Konfor için Dizayn Edilmiş Tasarım" />
 			<column name="price" value="40000" />
@@ -37,7 +34,6 @@
 		</insert>
 		
 		<insert tableName="product">
-			<column name="id" valueNumeric="4"/>
 			<column name="name" value="VESTEL 65UA9631" />
 			<column name="explanation" value="65 inç 164 Ekran Uydu Alıcılı Smart 4K Android LED TV" />
 			<column name="price" value="29799" />

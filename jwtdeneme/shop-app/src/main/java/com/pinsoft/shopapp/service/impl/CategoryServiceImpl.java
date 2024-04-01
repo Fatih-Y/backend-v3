@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -35,7 +36,33 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryByName(String name) {
+    public Optional<Category> getCategoryByName(String name) {
         return categoryRepository.findByName(name);
     }
+    @Override
+    public Category addCategory(String name) {
+        Category category = new Category();
+        category.setName(name);
+        return categoryRepository.save(category);
+    }
+    @Override
+    public Optional<Category> updateCategory(String categoryName) {
+        return categoryRepository.findByName(categoryName)
+                .map(existingCategory -> {
+                    existingCategory.setName(categoryName);
+                    return categoryRepository.save(existingCategory);
+                });
+    }
+
+    @Override
+    public void deleteCategory(int id) {
+        categoryRepository.deleteById(id);
+    }
+
+
+
+
+
+
+
 }

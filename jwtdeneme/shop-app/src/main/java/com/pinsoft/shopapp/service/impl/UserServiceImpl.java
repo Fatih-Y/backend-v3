@@ -1,6 +1,8 @@
 package com.pinsoft.shopapp.service.impl;
 
-import com.pinsoft.shopapp.dto.DeleteUser;
+import com.pinsoft.shopapp.dto.userDTO.DeleteUser;
+import com.pinsoft.shopapp.dto.userDTO.EditUser;
+import com.pinsoft.shopapp.dto.userDTO.GetAllUsers;
 import com.pinsoft.shopapp.entity.Role;
 import com.pinsoft.shopapp.entity.User;
 import com.pinsoft.shopapp.repository.RoleRepository;
@@ -11,11 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -32,8 +33,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<GetAllUsers> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> new GetAllUsers(user.getId(), user.getUsername(), user.getEmail(), user.getRole().getName()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -42,14 +46,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(String username, String email, String roleName, String password) {
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new EntityNotFoundException(roleName + " isimli rol bulunamadı"));
-        user.setRole(role);
+    public User addUser(User user) {
+        Role userRole = roleRepository.findByName(user.getRole().getName())
+                .orElseThrow(() -> new RuntimeException(user.getRole().getName()+" adlı rol bulunamadı"));
+        user.setRole(userRole);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEmail(user.getEmail());
+        user.setUsername(user.getUsername());
         return userRepository.save(user);
     }
 
@@ -69,37 +72,32 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity updateUser(User user) {
-        Optional<User> userToUpdate = userRepository.findByUsername(user.getUsername());
-        if (userToUpdate.isPresent()) {
-            userToUpdate.get().setUsername(user.getUsername());
-            userToUpdate.get().setPassword(user.getPassword());
-            userToUpdate.get().setEmail(user.getEmail());
-            Optional<Role> optionalRole = roleRepository.findByName(user.getRole().getName());
-            if (optionalRole.isEmpty()) {
-                throw new RuntimeException(user.getRole().getName() + " isimli rol bulunamadı");
-            }
-            Role role = optionalRole.get();
-            userToUpdate.get().setRole(role);
-            userRepository.save(userToUpdate.get());
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public Optional<User> updateUser(User user) {
+        return userRepository.findById(user.getId())
+                .map(userToUpdate -> {
+                    userToUpdate.setUsername(user.getUsername());
+                    userToUpdate.setEmail(user.getEmail());
+                    userToUpdate.setPassword(passwordEncoder.encode(user.getPassword()));
+
+                    Role newRole = roleRepository.findByName(user.getRole().getName())
+                            .orElseThrow(() -> new EntityNotFoundException(user.getRole().getName()+" isimli rol bulunamadı" ));
+                    userToUpdate.setRole(newRole);
+                    return userRepository.save(userToUpdate);
+                });
     }
     @Override
-    public ResponseEntity editUser(User user) {
-        Optional<User> userToEdit = userRepository.findByUsername(user.getUsername());
-        if(userToEdit.isPresent()){
-            userToEdit.get().setUsername(user.getUsername());   // parola boş kalınca <string> atandı. çözüm bul
-            userToEdit.get().setPassword(user.getPassword());
-            userToEdit.get().setEmail(user.getEmail());
-            userRepository.save(userToEdit.get());
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public Optional<User> editUser(EditUser editUser) {
+        return userRepository.findById(editUser.getId())
+                .map(user -> {
+                    editUser.getUsername().ifPresent(user::setUsername);
+                    editUser.getEmail().ifPresent(user::setEmail);
+                    editUser.getPassword().ifPresent(user::setPassword);
+                    return userRepository.save(user);
+                });
     }
+}
+
+
 
 
 
@@ -110,4 +108,4 @@ public class UserServiceImpl implements UserService {
 
 
     // response entityler sadece controllerda olacak burdakileri kaldır ve düzenle
-}
+

@@ -24,7 +24,7 @@
 
 		<createTable tableName="product">
 
-			<column name="id" type="int" autoIncrement="true">
+			<column name="id" type="SERIAL" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false"
 					unique="true" />
 			</column>

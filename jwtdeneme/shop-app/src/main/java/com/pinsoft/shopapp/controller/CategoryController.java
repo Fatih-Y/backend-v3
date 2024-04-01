@@ -5,10 +5,10 @@ import com.pinsoft.shopapp.entity.Category;
 import com.pinsoft.shopapp.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,9 +39,37 @@ public class CategoryController {
 
 	)})
 
-	@GetMapping("/{name}")
-	public Category getCategoryByName(@PathVariable String name) {
-
-		return categoryService.getCategoryByName(name);
+	@GetMapping("/categories/{name}")
+	public ResponseEntity<Category> getCategoryByName(@PathVariable String name) {
+		return categoryService.getCategoryByName(name)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+
+	@PostMapping("/categories")
+	public ResponseEntity<Category> addCategory(@RequestParam String name) {
+		Category newCategory = categoryService.addCategory(name);
+		return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
+	}
+
+	@PutMapping("/categories")
+	public ResponseEntity<Category> updateCategory(@RequestParam String categoryName) {
+		return categoryService.updateCategory(categoryName)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+
+	@DeleteMapping("/categories/{id}")
+	public ResponseEntity<Void> deleteCategory(@PathVariable int id) {
+		categoryService.deleteCategory(id);
+		return ResponseEntity.noContent().build();
+	}
+
+
+
+
+
+
+
 }

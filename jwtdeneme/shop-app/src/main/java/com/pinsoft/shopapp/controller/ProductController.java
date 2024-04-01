@@ -1,9 +1,10 @@
 package com.pinsoft.shopapp.controller;
 
 
-import com.pinsoft.shopapp.dto.GetAllProducts;
-import com.pinsoft.shopapp.dto.GetProductsDetails;
-import com.pinsoft.shopapp.dto.ProductSearch;
+import com.pinsoft.shopapp.dto.productDTO.AddProduct;
+import com.pinsoft.shopapp.dto.productDTO.GetAllProducts;
+import com.pinsoft.shopapp.dto.productDTO.GetProductsDetails;
+import com.pinsoft.shopapp.dto.productDTO.ProductSearch;
 import com.pinsoft.shopapp.entity.Product;
 
 import com.pinsoft.shopapp.service.ProductService;
@@ -12,9 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,9 +21,9 @@ import java.util.List;
 @RequestMapping("/api/product")
 public class ProductController {
 
-	@Autowired
-	private ProductService productService;
 
+	private final ProductService productService;
+	@Autowired
 	public ProductController(ProductService productService) {
 		this.productService = productService;
 	}
@@ -37,8 +36,8 @@ public class ProductController {
 	@GetMapping("/getAllProducts")
 	public List<GetAllProducts> getAllProducts() {
 		return productService.getAll();
-
 	}
+
 
 	@Operation(tags = "Select Product", description = "Get Product", responses = {
 			@ApiResponse(description = "Success", responseCode = "200"),
@@ -58,14 +57,10 @@ public class ProductController {
 	public List<GetProductsDetails> findAll() {
 		return productService.findAll();
 	}
-	@PostMapping("/addProduct")
-	public String addProduct(@RequestParam("file") MultipartFile file,
-							 @RequestParam("name") String name,
-							 @RequestParam("price") double price,
-							 @RequestParam("explanation") String explanation,
-							 @RequestParam("categoryName") String categoryName) {
-		productService.addProduct(file, name, price, explanation, categoryName);
-		return " Ürün ekleme başarılı";
+	@PostMapping(value = "/addProduct", consumes = {"multipart/form-data"})
+	public ResponseEntity<String> addProduct(@ModelAttribute AddProduct addProduct) {
+		productService.addProduct(addProduct);
+		return ResponseEntity.ok("Ürün ekleme başarılı");
 	}
 	@DeleteMapping("/deleteProduct/{id}")
 	public ResponseEntity deleteProduct(@PathVariable int id) {

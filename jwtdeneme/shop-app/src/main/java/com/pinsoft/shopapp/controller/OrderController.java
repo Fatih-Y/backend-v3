@@ -7,7 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 import java.util.List;
 
@@ -42,7 +44,25 @@ public class OrderController {
                 .orElseGet(()-> ResponseEntity.notFound().build());
     }
     // get order details ekle. findall kullananı. daha iyiyse üsttekini sil
+    @PostMapping("/addOrder")
+    public ResponseEntity<Order> addOrder(@RequestBody Order newOrder) {
+        Order savedOrder = orderService.addOrder(newOrder);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(savedOrder.getId()).toUri();
+        return ResponseEntity.created(location).body(savedOrder);
+    }
 
+    @PutMapping("/updateOrder")
+    public ResponseEntity<Order> updateOrder(@RequestBody Order order) {
+        return orderService.updateOrder(order)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+    @DeleteMapping("/deleteOrder")
+    public ResponseEntity<Void> deleteOrder(@PathVariable int id) {
+        orderService.deleteOrder(id);
+        return ResponseEntity.noContent().build();
+    }
 
 
 }
