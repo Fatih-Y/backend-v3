@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Query("SELECT o FROM OrderEntity o WHERE o.user.id = :userId")
-    List<Order> findByUserId(Integer userId);
+    List<Order> findByUserId(int userId);
 
 
 }

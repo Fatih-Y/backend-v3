@@ -14,4 +14,5 @@ public interface OrderService {
     Optional<Order> updateOrder(Order order);
 
     void deleteOrder(int id);
+    List<Order> findByUserId(int userId);
 }

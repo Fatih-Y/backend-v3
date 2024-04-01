@@ -43,7 +43,15 @@ public class OrderController {
         return order.map(ResponseEntity::ok)
                 .orElseGet(()-> ResponseEntity.notFound().build());
     }
+    @GetMapping("/findByUserId")
+    public List<Order> findByUserId (@RequestParam int userId){
+        return orderService.findByUserId(userId);
+    }
+
+
+
     // get order details ekle. findall kullananı. daha iyiyse üsttekini sil
+
     @PostMapping("/addOrder")
     public ResponseEntity<Order> addOrder(@RequestBody Order newOrder) {
         Order savedOrder = orderService.addOrder(newOrder);
@@ -51,7 +59,6 @@ public class OrderController {
                 .buildAndExpand(savedOrder.getId()).toUri();
         return ResponseEntity.created(location).body(savedOrder);
     }
-
     @PutMapping("/updateOrder")
     public ResponseEntity<Order> updateOrder(@RequestBody Order order) {
         return orderService.updateOrder(order)
