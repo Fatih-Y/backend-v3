@@ -1,8 +1,8 @@
 package com.pinsoft.shopapp.service;
 
-import com.pinsoft.shopapp.dto.DeleteUser;
-import com.pinsoft.shopapp.dto.EditUser;
-import com.pinsoft.shopapp.dto.GetAllUsers;
+import com.pinsoft.shopapp.dto.userDTO.DeleteUser;
+import com.pinsoft.shopapp.dto.userDTO.EditUser;
+import com.pinsoft.shopapp.dto.userDTO.GetAllUsers;
 import com.pinsoft.shopapp.entity.User;
 import org.springframework.http.ResponseEntity;
 

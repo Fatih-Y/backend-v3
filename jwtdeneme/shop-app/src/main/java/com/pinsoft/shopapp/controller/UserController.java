@@ -1,14 +1,13 @@
 package com.pinsoft.shopapp.controller;
 
-import com.pinsoft.shopapp.dto.DeleteUser;
+import com.pinsoft.shopapp.dto.userDTO.DeleteUser;
 
-import com.pinsoft.shopapp.dto.EditUser;
-import com.pinsoft.shopapp.dto.GetAllUsers;
+import com.pinsoft.shopapp.dto.userDTO.EditUser;
+import com.pinsoft.shopapp.dto.userDTO.GetAllUsers;
 import com.pinsoft.shopapp.entity.User;
 import com.pinsoft.shopapp.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,22 +52,23 @@ public class UserController {
         return ResponseEntity.created(location).body(savedUser);
     }
 
-    @DeleteMapping("/deleteUser/{id}")
-    public ResponseEntity<DeleteUser> deleteUser(@PathVariable int id) {
-        return userService.deleteUser(id);
-    }
-
     @PutMapping("/updateUser")
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         return userService.updateUser(user)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     @PutMapping("/editUser")
     public ResponseEntity<User> editUser(@RequestBody EditUser editUser) {
         return userService.editUser(editUser)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+//    @PreAuthorize("hasAuthority('admin')")
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity<DeleteUser> deleteUser(@PathVariable int id) {
+        return userService.deleteUser(id);
     }
 }
 

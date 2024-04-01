@@ -1,9 +1,11 @@
 package com.pinsoft.shopapp.service.impl;
 
-import com.pinsoft.shopapp.dto.*;
+import com.pinsoft.shopapp.dto.productDTO.AddProduct;
+import com.pinsoft.shopapp.dto.productDTO.GetAllProducts;
+import com.pinsoft.shopapp.dto.productDTO.GetProductsDetails;
+import com.pinsoft.shopapp.dto.productDTO.ProductSearch;
 import com.pinsoft.shopapp.entity.Category;
 import com.pinsoft.shopapp.entity.Product;
-import com.pinsoft.shopapp.entity.User;
 import com.pinsoft.shopapp.mapper.ModelMapperService;
 import com.pinsoft.shopapp.repository.CategoryRepository;
 import com.pinsoft.shopapp.repository.ProductRepository;
@@ -13,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -53,6 +54,16 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByName(name);
     }
 
+
+    @Override
+    public List<GetProductsDetails> findAll() {  //ürüne tıklanıldığında açılan ürün detayları sayfası için
+        List<Product> products = productRepository.findAll();
+        List<GetProductsDetails> getProductsDetails = products.stream()
+                .map(product -> this.modelMapperService.forResponse()
+                        .map(product, GetProductsDetails.class)).collect(Collectors.toList());
+        return getProductsDetails;
+    }
+
     @Override
     public void addProduct(AddProduct addProduct) {
         Product product = new Product();
@@ -72,16 +83,6 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Böyle bir kategori yok: " + addProduct.getCategoryName()));
         product.setCategory(category);
         productRepository.save(product);
-    }
-
-
-    @Override
-    public List<GetProductsDetails> findAll() {  //ürüne tıklanıldığında açılan ürün detayları sayfası için
-        List<Product> products = productRepository.findAll();
-        List<GetProductsDetails> getProductsDetails = products.stream()
-                .map(product -> this.modelMapperService.forResponse()
-                        .map(product, GetProductsDetails.class)).collect(Collectors.toList());
-        return getProductsDetails;
     }
 
 

@@ -1,8 +1,8 @@
 package com.pinsoft.shopapp.service.impl;
 
-import com.pinsoft.shopapp.dto.DeleteUser;
-import com.pinsoft.shopapp.dto.EditUser;
-import com.pinsoft.shopapp.dto.GetAllUsers;
+import com.pinsoft.shopapp.dto.userDTO.DeleteUser;
+import com.pinsoft.shopapp.dto.userDTO.EditUser;
+import com.pinsoft.shopapp.dto.userDTO.GetAllUsers;
 import com.pinsoft.shopapp.entity.Role;
 import com.pinsoft.shopapp.entity.User;
 import com.pinsoft.shopapp.repository.RoleRepository;
@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

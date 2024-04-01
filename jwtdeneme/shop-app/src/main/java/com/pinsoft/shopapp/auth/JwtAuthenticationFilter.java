@@ -26,11 +26,11 @@ import java.util.Map;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private final JwtUtil jwtUtil;
-    @Autowired
-    private final ObjectMapper objectMapper;
 
+    private final JwtUtil jwtUtil;
+
+    private final ObjectMapper objectMapper;
+    @Autowired
     public JwtAuthenticationFilter(JwtUtil jwtUtil, ObjectMapper objectMapper) {
         this.jwtUtil = jwtUtil;
         this.objectMapper = objectMapper;

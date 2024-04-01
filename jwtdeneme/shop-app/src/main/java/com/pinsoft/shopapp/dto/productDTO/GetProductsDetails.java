@@ -1,4 +1,4 @@
-package com.pinsoft.shopapp.dto;
+package com.pinsoft.shopapp.dto.productDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductSearch {
+public class GetProductsDetails {
     private int id;
     private String name;
-    private Double price;
+    private double price;
     private String explanation;
     private String categoryName;
+    private String base64Image;
 }

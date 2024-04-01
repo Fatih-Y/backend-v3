@@ -1,4 +1,4 @@
-package com.pinsoft.shopapp.dto;
+package com.pinsoft.shopapp.dto.productDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

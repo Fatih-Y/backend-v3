@@ -1,10 +1,10 @@
 package com.pinsoft.shopapp.controller;
 
 
-import com.pinsoft.shopapp.dto.AddProduct;
-import com.pinsoft.shopapp.dto.GetAllProducts;
-import com.pinsoft.shopapp.dto.GetProductsDetails;
-import com.pinsoft.shopapp.dto.ProductSearch;
+import com.pinsoft.shopapp.dto.productDTO.AddProduct;
+import com.pinsoft.shopapp.dto.productDTO.GetAllProducts;
+import com.pinsoft.shopapp.dto.productDTO.GetProductsDetails;
+import com.pinsoft.shopapp.dto.productDTO.ProductSearch;
 import com.pinsoft.shopapp.entity.Product;
 
 import com.pinsoft.shopapp.service.ProductService;
@@ -13,9 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
